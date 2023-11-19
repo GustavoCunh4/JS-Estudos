@@ -1,10 +1,11 @@
-const minutesDoc = document.querySelector("#minutes");
-const secondsDoc = document.querySelector("#seconds");
-const millisecondsDoc = document.querySelector("#milliseconds");
+//Timer
 const startBtn = document.querySelector("#startBtn");
 const pauseBtn = document.querySelector("#pauseBtn");
 const resumeBtn = document.querySelector("#resumeBtn");
 const resetBtn = document.querySelector("#resetBtn");
+const millisecondsDoc = document.querySelector("#milliseconds");
+const secondsDoc = document.querySelector("#seconds");
+const minutesDoc = document.querySelector("#minutes");
 
 let intervalo;
 let minutes = 0;
@@ -36,9 +37,9 @@ function startTimer() {
                 seconds = 0;
             }
 
-            minutesDoc.textContent = formatTime(minutes);
-            secondsDoc.textContent = formatTime(seconds);
-            millisecondsDoc.textContent = formatMilliseconds(milliseconds);
+            minutesDoc.textContent = minutes;
+            secondsDoc.textContent = seconds;
+            millisecondsDoc.textContent = milliseconds;
         }
 
     }, 10);
@@ -46,14 +47,14 @@ function startTimer() {
     startBtn.style.display = "none";
     pauseBtn.style.display = "block";
 }
-
+//Função para pausar o timer, sumir o botão de pause e aparecer o botão resume
 pauseBtn.addEventListener("click", pauseTimer);
 function pauseTimer() { 
     paused = true;
     pauseBtn.style.display = "none";
     resumeBtn.style.display = "block";
 }
-
+//Função para continuar a contar o tempo do timer e voltar a aparecer o botão de pausar e sumir o botão de continuar
 resumeBtn.addEventListener("click", resumeTimer);
 function resumeTimer() {
     paused = false;
@@ -61,7 +62,8 @@ function resumeTimer() {
     resumeBtn.style.display = "none";
     
 }
-
+/*Função para resetar o timer, zerando os millisegundos, segundos e minutos, voltando a aparecer "00" neles,
+fazendo também aparecer o botão de start de novo e sumindo o botão de pausar*/
 resetBtn.addEventListener("click", resetTimer);
 function resetTimer() {
     clearInterval(intervalo);
@@ -79,12 +81,71 @@ function resetTimer() {
     
 }
 
-function formatTime(time) {
-    return time < 10 ? `0${time}` : time;
+
+
+
+
+
+//To Do List
+const addButton = document.getElementById("addButton");
+const inputList = document.getElementById("inputList");
+const taskList = document.getElementById("taskList");
+const clearTasksButton = document.getElementById("clearTasks");
+
+
+
+/*Criado um evento no botão "addButton" de click, que caso o retorno seja vazio, ele retorna para função,
+após isso foi criado alguns elementos que não podiam estar presentes no html, pois eles so aparecem em 
+certas situações, como o botão "checkButton" por exemplo*/
+addButton.addEventListener("click", addTask);
+function addTask() {
+    const taskText = inputList.value;
+    if (taskText === '') {
+        return;
+    }
+
+    const taskItem = document.createElement("li");
+    taskItem.className = "task-item";
+    const taskTextElement = document.createElement("span");
+    taskTextElement.className = "task-text";
+    taskTextElement.textContent = taskText;
+    const checkButton = document.createElement("button");
+    checkButton.className = "check-button";
+    checkButton.textContent = "Feito";
+    const removeButton = document.createElement("button");
+    removeButton.className = "remove-button";
+    removeButton.textContent = "Retirar";
+
+    //Evento para marcar a tarefa como concluída
+    checkButton.addEventListener('click', () => {
+        taskItem.classList.toggle('completed');
+    });
+
+    //Função para remover a tarefa
+    removeButton.addEventListener("click", removeTask);
+    function removeTask() {
+        taskItem.remove();
+    }
+
+    //Comando para fazer aparecer esses elementos dentro da constante "taskList"
+    taskList.appendChild(taskItem);
+    taskItem.appendChild(taskTextElement);
+    taskItem.appendChild(checkButton);
+    taskItem.appendChild(removeButton);
+
+    // Limpar o campo de entrada após adicionar a tarefa
+    inputList.value = ''; 
 }
 
-function formatMilliseconds(time) {
-    return time < 100 ? `0${time}`: time;
+// Função para limpar tarefas concluídas
+clearTasksButton.addEventListener("click", clearTasks);
+function clearTasks() {
+    const completedTasks = document.querySelectorAll(".task-item.completed");
+    completedTasks.forEach(task => {
+        task.remove();
+    });
 }
+
+
 
 
